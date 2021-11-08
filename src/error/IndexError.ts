@@ -13,8 +13,8 @@ export class IndexError extends RangeError {
   public readonly isIndexError = true
 
   public index: number
-  public min: number
-  public max: number
+  public min: number | undefined
+  public max: number | undefined
 
   constructor (index: number, min?: number, max?: number) {
     super()

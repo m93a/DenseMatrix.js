@@ -47,7 +47,7 @@ export function clone<T> (x: T): T {
  * @return {Object} Returns a copy of the object with mapped properties
  */
 export function mapObject<T extends object> (object: T, callback: (a: any) => any): object {
-  const clone: Partial<T> = {}
+  const clone: any = {}
 
   for (const [key, value] of Object.entries(object)) {
     clone[key] = callback(value)
@@ -62,7 +62,7 @@ export function mapObject<T extends object> (object: T, callback: (a: any) => an
  * @param {Object} b
  * @return {Object} a
  */
-export function extend (a, b) {
+export function extend (a: any, b: any) {
   for (const prop in b) {
     if (hasOwnProperty(b, prop)) {
       a[prop] = b[prop]
@@ -77,7 +77,7 @@ export function extend (a, b) {
  * @param {Object} b
  * @returns {Object}
  */
-export function deepExtend (a, b) {
+export function deepExtend (a: any, b: any) {
   // TODO: add support for Arrays to deepExtend
   if (Array.isArray(b)) {
     throw new TypeError('Arrays are not supported by deepExtend')
@@ -113,7 +113,7 @@ export function deepExtend (a, b) {
  * @param {Array | Object} b
  * @returns {boolean}
  */
-export function deepStrictEqual (a, b) {
+export function deepStrictEqual (a: any, b: any) {
   let prop, i, len
   if (Array.isArray(a)) {
     if (!Array.isArray(b)) {
@@ -160,7 +160,7 @@ export function deepStrictEqual (a, b) {
  * @param {Object} nestedObject
  * @return {Object} Returns the flattened object
  */
-export function deepFlatten (nestedObject) {
+export function deepFlatten (nestedObject: any) {
   const flattenedObject = {}
 
   _deepFlatten(nestedObject, flattenedObject)
@@ -169,7 +169,7 @@ export function deepFlatten (nestedObject) {
 }
 
 // helper function used by deepFlatten
-function _deepFlatten (nestedObject, flattenedObject) {
+function _deepFlatten (nestedObject: any, flattenedObject: any) {
   for (const prop in nestedObject) {
     if (hasOwnProperty(nestedObject, prop)) {
       const value = nestedObject[prop]
@@ -207,9 +207,9 @@ export function canDefineProperty () {
  * @param {Function} valueResolver Function returning the property value. Called
  *                                without arguments.
  */
-export function lazy (object, prop, valueResolver) {
+export function lazy (object: any, prop: string, valueResolver: Function) {
   let _uninitialized = true
-  let _value
+  let _value: any
 
   Object.defineProperty(object, prop, {
     get: function () {
@@ -237,7 +237,7 @@ export function lazy (object, prop, valueResolver) {
  * @param {string | string[]} path   A dot separated string like 'name.space'
  * @return {Object} Returns the object at the end of the path
  */
-export function traverse (object, path) {
+export function traverse (object: any, path: string | string[]): any {
   if (path && typeof path === 'string') {
     return traverse(object, path.split('.'))
   }
@@ -262,7 +262,7 @@ export function traverse (object, path) {
  * @param {Object} object
  * @param {string} property
  */
-export function hasOwnProperty (object, property) {
+export function hasOwnProperty (object: any, property: string) {
   return object && Object.hasOwnProperty.call(object, property)
 }
 
@@ -278,7 +278,7 @@ export function hasOwnProperty (object, property) {
  * @param {*} object
  * @returns {boolean}
  */
-export function isLegacyFactory (object) {
+export function isLegacyFactory (object: any) {
   return object && typeof object.factory === 'function'
 }
 
@@ -288,7 +288,7 @@ export function isLegacyFactory (object) {
  * @param {string | string[]} path
  * @returns {Object}
  */
-export function get (object, path) {
+export function get (object: any, path: string | string[]): any {
   if (typeof path === 'string') {
     if (isPath(path)) {
       return get(object, path.split('.'))
@@ -316,7 +316,7 @@ export function get (object, path) {
  * @param {*} value
  * @returns {Object}
  */
-export function set (object, path, value) {
+export function set (object: any, path: string | string[], value: any): any {
   if (typeof path === 'string') {
     if (isPath(path)) {
       return set(object, path.split('.'), value)
@@ -350,7 +350,7 @@ export function set (object, path, value) {
  * @param {function} [transform] Optional value to transform a value when picking it
  * @return {Object}
  */
-export function pick (object, properties, transform) {
+export function pick (object: any, properties: string[], transform: Function): any {
   const copy = {}
 
   for (let i = 0; i < properties.length; i++) {
@@ -371,8 +371,8 @@ export function pick (object, properties, transform) {
  * @param {string[]} properties
  * @return {Object}
  */
-export function pickShallow (object, properties) {
-  const copy = {}
+export function pickShallow (object: any, properties: string[]) {
+  const copy: any = {}
 
   for (let i = 0; i < properties.length; i++) {
     const key = properties[i]
@@ -385,11 +385,11 @@ export function pickShallow (object, properties) {
   return copy
 }
 
-export function values (object) {
+export function values (object: any) {
   return Object.keys(object).map(key => object[key])
 }
 
 // helper function to test whether a string contains a path like 'user.name'
-function isPath (str) {
+function isPath (str: string) {
   return str.indexOf('.') !== -1
 }

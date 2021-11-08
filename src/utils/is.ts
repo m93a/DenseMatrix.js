@@ -20,15 +20,15 @@ export function isBigNumber (x: any) {
   return (x && x.constructor.prototype.isBigNumber === true) || false
 }
 
-export function isComplex (x) {
+export function isComplex (x: any) {
   return (x && typeof x === 'object' && Object.getPrototypeOf(x).isComplex === true) || false
 }
 
-export function isFraction (x) {
+export function isFraction (x: any) {
   return (x && typeof x === 'object' && Object.getPrototypeOf(x).isFraction === true) || false
 }
 
-export function isUnit (x) {
+export function isUnit (x: any) {
   return (x && x.constructor.prototype.isUnit === true) || false
 }
 
@@ -42,31 +42,31 @@ export function isClonable (x: any): x is { clone(): typeof x } {
   return typeof x?.clone === 'function'
 }
 
-export function isDenseMatrix (x) {
+export function isDenseMatrix (x: any) {
   return (x && x.isDenseMatrix && x.constructor.prototype.isMatrix === true) || false
 }
 
-export function isSparseMatrix (x) {
+export function isSparseMatrix (x: any) {
   return (x && x.isSparseMatrix && x.constructor.prototype.isMatrix === true) || false
 }
 
-export function isRange (x) {
+export function isRange (x: any) {
   return (x && x.constructor.prototype.isRange === true) || false
 }
 
-export function isIndex (x) {
+export function isIndex (x: any) {
   return (x && x.constructor.prototype.isIndex === true) || false
 }
 
-export function isBoolean (x) {
+export function isBoolean (x: any) {
   return typeof x === 'boolean'
 }
 
-export function isResultSet (x) {
+export function isResultSet (x: any) {
   return (x && x.constructor.prototype.isResultSet === true) || false
 }
 
-export function isHelp (x) {
+export function isHelp (x: any) {
   return (x && x.constructor.prototype.isHelp === true) || false
 }
 
@@ -98,67 +98,67 @@ export function isUndefined (x: any): x is undefined {
   return x === undefined
 }
 
-export function isAccessorNode (x) {
+export function isAccessorNode (x: any) {
   return (x && x.isAccessorNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isArrayNode (x) {
+export function isArrayNode (x: any) {
   return (x && x.isArrayNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isAssignmentNode (x) {
+export function isAssignmentNode (x: any) {
   return (x && x.isAssignmentNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isBlockNode (x) {
+export function isBlockNode (x: any) {
   return (x && x.isBlockNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isConditionalNode (x) {
+export function isConditionalNode (x: any) {
   return (x && x.isConditionalNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isConstantNode (x) {
+export function isConstantNode (x: any) {
   return (x && x.isConstantNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isFunctionAssignmentNode (x) {
+export function isFunctionAssignmentNode (x: any) {
   return (x && x.isFunctionAssignmentNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isFunctionNode (x) {
+export function isFunctionNode (x: any) {
   return (x && x.isFunctionNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isIndexNode (x) {
+export function isIndexNode (x: any) {
   return (x && x.isIndexNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isNode (x) {
+export function isNode (x: any) {
   return (x && x.isNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isObjectNode (x) {
+export function isObjectNode (x: any) {
   return (x && x.isObjectNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isOperatorNode (x) {
+export function isOperatorNode (x: any) {
   return (x && x.isOperatorNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isParenthesisNode (x) {
+export function isParenthesisNode (x: any) {
   return (x && x.isParenthesisNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isRangeNode (x) {
+export function isRangeNode (x: any) {
   return (x && x.isRangeNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isSymbolNode (x) {
+export function isSymbolNode (x: any) {
   return (x && x.isSymbolNode === true && x.constructor.prototype.isNode === true) || false
 }
 
-export function isChain (x) {
+export function isChain (x: any) {
   return (x && x.constructor.prototype.isChain === true) || false
 }
 

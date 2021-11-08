@@ -1,5 +1,5 @@
 import { symbols, Ring, Tensor, InstanceOf as _InstanceOf, isTensor, DivisionRing, NormedDivisionRing } from '@m93a/arithmetic-types'
-import { arraySize, getArrayDataType, resize, validateIndex } from './utils/array'
+import { arraySize, getArrayDataType, MultidimArray, resize, validateIndex } from './utils/array'
 import { clone } from './utils/object'
 import { mapToMultidimArray, retrieveTopArrayByIndex } from './utils/tensor'
 import { isArray, typeOf } from './utils/is'
@@ -9,9 +9,8 @@ import { NumberArithmetics } from './utils/numberArithmetic'
 import { norm } from './norm'
 import { ArithmeticError } from './error/ArithmeticError'
 
-export type InstanceOf<T> = T extends number ? number : _InstanceOf<T>
+export type InstanceOf<T> = T extends Ring<number> ? number : _InstanceOf<T>
 type TensorInstance<T, R> = _InstanceOf<Tensor<T, R>>
-type MultidimArray<R> = R[] | MultidimArray<R>[]
 
 export function isDenseMatrix(x: any): x is DenseMatrix<any, any> {
     return typeof x === 'object' && x[symbols.Tensor] && x.type === 'DenseMatrix'
@@ -64,7 +63,7 @@ function preprocess<
  * @enum {{ value, index: number[] }}
  */
 export class DenseMatrix<
-    ScalarArithmetics extends Ring<any> = Ring<number>,
+    ScalarArithmetics extends Ring<any> = typeof NumberArithmetics,
     Scalar extends InstanceOf<ScalarArithmetics> = InstanceOf<ScalarArithmetics>
 >
 implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
@@ -78,7 +77,7 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
     public readonly isDenseMatrix = true
 
     public [symbols.Arithmetics] = DenseMatrix as any
-    public scalarArithmetics: ScalarArithmetics
+    public scalarArithmetics: ScalarArithmetics;
 
     #data: MultidimArray<Scalar>
     #size: number[]
@@ -124,6 +123,12 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
         else {
             throw new TypeError('Unsupported type of data (' + typeOf(data) + ')')
         }
+
+        // Find scalar arithmetic
+        let el = this.#data[0];
+        while (Array.isArray(el)) el = el[0]
+        if (typeof el === 'number') this.scalarArithmetics = NumberArithmetics as any
+        else this.scalarArithmetics = el[symbols.Arithmetics] as any
     }
 
 
@@ -331,7 +336,7 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
      *                              parameters: the value of the element, the index
      *                              of the element, and the Matrix being traversed.
      */
-    forEach(callback: (value: Scalar, index: number[], matrix: DenseMatrix<ScalarArithmetics>) => void) {
+    forEach(callback: (value: Scalar, index: number[], matrix: DenseMatrix<ScalarArithmetics, Scalar>) => void) {
 
         const self = this
         const recurse = (value: Scalar|MultidimArray<Scalar>, index: number[]) => {
@@ -348,8 +353,10 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
     /**
      * Iterate over the matrix elements
      */
-    [Symbol.iterator] = function* (): IterableIterator<{ value: Scalar, index: number[] }> {
-        const recurse = function* (value: Scalar|MultidimArray<Scalar>, index: number[]) {
+    [Symbol.iterator] = function* (
+        this: DenseMatrix<ScalarArithmetics, Scalar>
+    ): IterableIterator<{ value: Scalar, index: number[] }> {
+        const recurse = function* (value: Scalar|MultidimArray<Scalar>, index: number[]): any {
             if (isArray(value)) {
                 for (let i = 0; i < value.length; i++) {
                     yield* recurse(value[i], index.concat(i))
@@ -358,7 +365,7 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
                 yield ({ value, index })
             }
         }
-        yield* recurse(this._data, [])
+        yield* recurse(this.#data, [])
     }
 
 
@@ -376,7 +383,7 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
 
         const data = this.#data
         for (const row of data) {
-            result.push(new DenseMatrix<ScalarArithmetics>([row as Scalar[]]))
+            result.push(new DenseMatrix<ScalarArithmetics, Scalar>([row as Scalar[]]))
         }
 
         return result
@@ -395,10 +402,10 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
             throw new TypeError('Rows can only be returned for a 2D matrix.')
         }
 
-        const data = this.#data
+        const data = this.#data as Scalar[][]
         for (let i = 0; i < s[1]; i++) {
             const col = data.map(row => [row[i]])
-            result.push(new DenseMatrix(col))
+            result.push(new DenseMatrix<ScalarArithmetics, Scalar>(col))
         }
 
         return result
@@ -435,7 +442,7 @@ implements TensorInstance<DenseMatrix<ScalarArithmetics>, ScalarArithmetics>
      *                                                options.
      * @returns {string} str
      */
-    format(options) {
+    format(options: any) {
         return format(this.#data, options)
     }
 

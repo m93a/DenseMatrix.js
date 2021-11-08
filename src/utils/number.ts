@@ -1,19 +1,13 @@
 import { isNumber } from './is'
 
-/**
- * @typedef {{sign: '+' | '-' | '', coefficients: number[], exponent: number}} SplitValue
- */
+interface SplitValue {sign: '+' | '-' | '', coefficients: number[], exponent: number}
 
 /**
  * Check if a number is integer
  * @param {number | boolean} value
  * @return {boolean} isInteger
  */
-export function isInteger (value) {
-  if (typeof value === 'boolean') {
-    return true
-  }
-
+export function isInteger (value: number) {
   return isFinite(value)
     ? (value === Math.round(value))
     : false
@@ -110,9 +104,9 @@ export const expm1 = /* #__PURE__ */ Math.expm1 || function expm1 (x) {
  * @param {number} size
  * @returns {string}
  */
-function formatNumberToBase (n, base, size) {
+function formatNumberToBase (n: number, base?: number, size?: number) {
   const prefixes = { 2: '0b', 8: '0o', 16: '0x' }
-  const prefix = prefixes[base]
+  const prefix: string | undefined = prefixes[base as 2|8|16]
   let suffix = ''
   if (size) {
     if (size < 1) {
@@ -224,7 +218,7 @@ function formatNumberToBase (n, base, size) {
  * @param {Object | Function | number} [options]
  * @return {string} str The formatted value
  */
-export function format (value, options) {
+export function format (value: number, options: any) {
   if (typeof options === 'function') {
     // handle format(value, fn)
     return options(value)
@@ -242,7 +236,7 @@ export function format (value, options) {
   // default values for options
   let notation = 'auto'
   let precision
-  let wordSize
+  let wordSize: 2|8|16|undefined
 
   if (options) {
     // determine notation from options
@@ -306,14 +300,14 @@ export function format (value, options) {
  * @return {SplitValue}
  *              Returns an object containing sign, coefficients, and exponent
  */
-export function splitNumber (value) {
+export function splitNumber (value: number | string): SplitValue {
   // parse the input value
   const match = String(value).toLowerCase().match(/^0*?(-?)(\d+\.?\d*)(e([+-]?\d+))?$/)
   if (!match) {
     throw new SyntaxError('Invalid number ' + value)
   }
 
-  const sign = match[1]
+  const sign = match[1] as any
   const digits = match[2]
   let exponent = parseFloat(match[4] || '0')
 
@@ -350,8 +344,8 @@ export function splitNumber (value) {
  * @param {number | string} value
  * @param {number} [precision]        Optional number of significant figures to return.
  */
-export function toEngineering (value, precision) {
-  if (isNaN(value) || !isFinite(value)) {
+export function toEngineering (value: number | string, precision: number) {
+  if (isNaN(+value) || !isFinite(+value)) {
     return String(value)
   }
 
@@ -405,8 +399,8 @@ export function toEngineering (value, precision) {
  * @param {number} [precision=undefined]  Optional number of decimals after the
  *                                        decimal point. null by default.
  */
-export function toFixed (value, precision) {
-  if (isNaN(value) || !isFinite(value)) {
+export function toFixed (value: number | string, precision: number) {
+  if (isNaN(+value) || !isFinite(+value)) {
     return String(value)
   }
 
@@ -414,7 +408,7 @@ export function toFixed (value, precision) {
   const rounded = (typeof precision === 'number')
     ? roundDigits(splitValue, splitValue.exponent + 1 + precision)
     : splitValue
-  let c = rounded.coefficients
+  let c: Array<string|number> = rounded.coefficients
   let p = rounded.exponent + 1 // exponent may have changed
 
   // append zeros if needed
@@ -425,7 +419,7 @@ export function toFixed (value, precision) {
 
   // prepend zeros if needed
   if (p < 0) {
-    c = zeros(-p + 1).concat(c)
+    c = (zeros(-p + 1) as Array<string|number>).concat(c)
     p = 1
   }
 
@@ -444,8 +438,8 @@ export function toFixed (value, precision) {
  *                              If not provided, the maximum available digits
  *                              is used.
  */
-export function toExponential (value, precision) {
-  if (isNaN(value) || !isFinite(value)) {
+export function toExponential (value: number | string, precision: number) {
+  if (isNaN(+value) || !isFinite(+value)) {
     return String(value)
   }
 
@@ -476,8 +470,8 @@ export function toExponential (value, precision) {
  *                                         upper = +5 (excl)
  * @return {string}
  */
-export function toPrecision (value, precision, options) {
-  if (isNaN(value) || !isFinite(value)) {
+export function toPrecision (value: number | string, precision: number, options: {lowerExp?: number, upperExp?: number}) {
+  if (isNaN(+value) || !isFinite(+value)) {
     return String(value)
   }
 
@@ -491,7 +485,7 @@ export function toPrecision (value, precision, options) {
     // exponential notation
     return toExponential(value, precision)
   } else {
-    let c = rounded.coefficients
+    let c: Array<string|number> = rounded.coefficients
     const e = rounded.exponent
 
     // append trailing zeros
@@ -505,7 +499,7 @@ export function toPrecision (value, precision, options) {
       (c.length < precision ? precision - c.length : 0)))
 
     // prepend zeros
-    c = zeros(-e).concat(c)
+    c = (zeros(-e) as Array<string|number>).concat(c)
 
     const dot = e > 0 ? e : 0
     if (dot < c.length - 1) {
@@ -524,7 +518,7 @@ export function toPrecision (value, precision, options) {
  *              Returns an object containing sign, coefficients, and exponent
  *              with rounded digits
  */
-export function roundDigits (split, precision) {
+export function roundDigits (split: SplitValue, precision: number): SplitValue {
   // create a clone
   const rounded = {
     sign: split.sign,
@@ -567,7 +561,7 @@ export function roundDigits (split, precision) {
  * @param {number} length
  * @return {Array}
  */
-function zeros (length) {
+function zeros (length: number) {
   const arr = []
   for (let i = 0; i < length; i++) {
     arr.push(0)
@@ -586,7 +580,7 @@ function zeros (length) {
  * @param {number} value
  * @return {number} digits   Number of significant digits
  */
-export function digits (value) {
+export function digits (value: number) {
   return value
     .toExponential()
     .replace(/e.*$/, '') // remove exponential notation
@@ -608,7 +602,7 @@ export const DBL_EPSILON = Number.EPSILON || 2.2204460492503130808472633361816E-
  *                            test whether x and y are exactly equal.
  * @return {boolean} whether the two numbers are nearly equal
 */
-export function nearlyEqual (x, y, epsilon) {
+export function nearlyEqual (x: number, y: number, epsilon: number) {
   // if epsilon is null or undefined, test whether x and y are exactly equal
   if (epsilon === null || epsilon === undefined) {
     return x === y

@@ -107,7 +107,7 @@ function matrixNorm<Scalar>(M: DenseMatrix<any, any>, p: number | '-inf' | 'inf'
             if (A[symbols.Real] !== true) throw new ArithmeticError('Real')
 
             let r = A.zero()
-            for (const col of M.columns() as Scalar[][]) {
+            for (const col of M.columns() as any as Scalar[][]) {
                 const colSum = col.map(A.norm).reduce(A.add)
                 if (A.gt(colSum, r)) r = colSum
             }
@@ -121,7 +121,7 @@ function matrixNorm<Scalar>(M: DenseMatrix<any, any>, p: number | '-inf' | 'inf'
             if (A[symbols.Real] !== true) throw new ArithmeticError('Real')
 
             let r = A.zero()
-            for (const row of M.rows() as Scalar[][]) {
+            for (const row of M.rows() as any as Scalar[][]) {
                 const rowSum = row.map(A.norm).reduce(A.add)
                 if (A.gt(rowSum, r)) r = rowSum
             }
