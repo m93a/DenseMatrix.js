@@ -1,0 +1,12 @@
+import { AdditiveGroup, DivisionRing, NormedDivisionRing, NormedVectorSpace, Real, Ring, UnitarySpace, VectorSpace } from './scalar-arithmetic';
+import { Tensor } from './tensor-arithmetic';
+import { InstanceOf } from './instance-types';
+export declare function isAdditiveGroup(x: any): x is InstanceOf<AdditiveGroup<any>>;
+export declare function isDivisionRing(x: any): x is InstanceOf<DivisionRing<any>>;
+export declare function isNormedDivisionRing(x: any): x is InstanceOf<NormedDivisionRing<any, any>>;
+export declare function isNormedVectorSpace(x: any): x is InstanceOf<NormedVectorSpace<any, any>>;
+export declare function isReal(x: any): x is InstanceOf<Real<any>>;
+export declare function isRing(x: any): x is InstanceOf<Ring<any>>;
+export declare function isUnitarySpace(x: any): x is InstanceOf<UnitarySpace<any, any>>;
+export declare function isVectorSpace(x: any): x is InstanceOf<VectorSpace<any, any>>;
+export declare function isTensor(x: any): x is InstanceOf<Tensor<any, any>>;

@@ -1,0 +1,20 @@
+import { symbols as symbols_instanceTypes } from './instance-types';
+import { symbols as symbols_scalarArithmetic } from './scalar-arithmetic';
+import { symbols as symbols_tensorArithmetic } from './tensor-arithmetic';
+export declare const symbols: {
+    Tensor: typeof symbols_tensorArithmetic.Tensor;
+    AdditiveGroup: typeof symbols_scalarArithmetic.AdditiveGroup;
+    VectorSpace: typeof symbols_scalarArithmetic.VectorSpace;
+    NormedVectorSpace: typeof symbols_scalarArithmetic.NormedVectorSpace;
+    UnitarySpace: typeof symbols_scalarArithmetic.UnitarySpace;
+    Ring: typeof symbols_scalarArithmetic.Ring;
+    DivisionRing: typeof symbols_scalarArithmetic.DivisionRing;
+    NormedDivisionRing: typeof symbols_scalarArithmetic.NormedDivisionRing;
+    Real: typeof symbols_scalarArithmetic.Real;
+    Arithmetics: typeof symbols_instanceTypes.Arithmetics;
+};
+export declare type symbols = typeof symbols;
+export * from './instance-types';
+export * from './scalar-arithmetic';
+export * from './tensor-arithmetic';
+export * from './is';

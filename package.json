@@ -1,0 +1,11 @@
+{
+  "name": "densematrix.js",
+  "version": "0.0.0",
+  "author": "Michal Grňo <m93a>",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/m93a/mathts",
+  "main": "src/DenseMatrix.ts",
+  "dependencies": {
+    "@m93a/arithmetic-types": "^0.0.11"
+  }
+}
