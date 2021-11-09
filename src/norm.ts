@@ -10,13 +10,12 @@ export type pValue = number | '-inf' | 'inf' | 'fro'
  * Calculate the norm for a vector or matrix
  */
 export function norm<
-    ScalarArithmetics extends Ring<any>
+    ScalarArithmetics extends Ring<any>,
+    Scalar extends InstanceOf<ScalarArithmetics> = InstanceOf<ScalarArithmetics>
 >(
-    M: DenseMatrix<ScalarArithmetics>,
+    M: DenseMatrix<ScalarArithmetics, Scalar>,
     p?: number | '-inf' | 'inf' | 'fro'
-): InstanceOf<ScalarArithmetics> {
-
-    type Scalar = InstanceOf<ScalarArithmetics>
+): Scalar {
 
     // Frobenius norm == sum of squares of entries
     if (p === 'fro' || p === undefined) {
